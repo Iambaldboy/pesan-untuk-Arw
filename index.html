@@ -16,12 +16,12 @@
       font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
       color:var(--fg);
       background: radial-gradient(1200px 800px at 10% 10%, #10331d 0%, var(--bg) 52%, #010302 100%);
-      overflow:hidden;
+      overflow:hidden; /* biar tidak scroll body, scrollnya di panel */
     }
 
     /* Effects */
     .grid{
-      position:fixed; inset:0; pointer-events:none; opacity:.16;
+      position:fixed; inset:0; pointer-events:none; opacity:.14;
       background-image:
         linear-gradient(to right, rgba(99,242,255,.18) 1px, transparent 1px),
         linear-gradient(to bottom, rgba(99,242,255,.12) 1px, transparent 1px);
@@ -30,8 +30,9 @@
       animation: gridMove 7s linear infinite;
     }
     @keyframes gridMove{ to{ background-position: 0 220px, 220px 0; } }
+
     .scanlines{
-      position:fixed; inset:0; pointer-events:none; opacity:.16;
+      position:fixed; inset:0; pointer-events:none; opacity:.14;
       background: repeating-linear-gradient(to bottom, rgba(0,0,0,0) 0px, rgba(0,0,0,0) 3px, rgba(0,0,0,.55) 4px);
       mix-blend-mode: multiply;
     }
@@ -40,37 +41,48 @@
       background: linear-gradient(180deg, rgba(99,242,255,0) 0%, rgba(99,242,255,.18) 40%, rgba(34,255,140,.10) 60%, rgba(99,242,255,0) 100%);
       filter: blur(1px);
       animation: sweep 5.5s ease-in-out infinite;
-      opacity:.9;
+      opacity:.85;
     }
     @keyframes sweep{
       0%{ top:-220px; opacity:.0 }
-      10%{ opacity:.9 }
-      50%{ top: calc(100vh - 120px); opacity:.55 }
-      90%{ opacity:.9 }
+      10%{ opacity:.85 }
+      50%{ top: calc(100vh - 120px); opacity:.45 }
+      90%{ opacity:.85 }
       100%{ top:-220px; opacity:.0 }
     }
 
+    /* ✅ Wrapper dengan padding aman + safe area */
     .wrap{
       position:relative;
       height:100%;
       display:flex;
       align-items:center;
       justify-content:center;
-      padding: 18px;
+      padding:
+        calc(14px + env(safe-area-inset-top))
+        calc(14px + env(safe-area-inset-right))
+        calc(14px + env(safe-area-inset-bottom))
+        calc(14px + env(safe-area-inset-left));
     }
+
+    /* ✅ Panel lebih kecil + max-height + scroll internal */
     .panel{
-      width:min(980px, 100%);
+      width:min(920px, 100%);
+      max-height: calc(100vh - 28px);
       border: 1px solid var(--border);
       border-radius: 18px;
       background: linear-gradient(180deg, rgba(11,27,17,.78), rgba(0,0,0,.35));
       box-shadow: 0 18px 60px var(--shadow);
       overflow:hidden;
       backdrop-filter: blur(10px);
+      display:flex;
+      flex-direction:column;
     }
 
     .topbar{
+      flex:0 0 auto;
       display:flex; justify-content:space-between; align-items:flex-start;
-      padding: 14px 16px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(17,50,34,.75);
       background: rgba(5,12,8,.55);
       gap:12px;
@@ -82,13 +94,12 @@
     .titles{min-width:0}
     .title{
       font-weight: 900; letter-spacing: .6px; text-transform: uppercase;
-      font-size: 13px; line-height: 1.2;
+      font-size: 12.5px; line-height: 1.2;
     }
     .subtitle{
       margin-top:4px;
-      font-size:12px; color: var(--dim);
+      font-size:11.5px; color: var(--dim);
       letter-spacing:.2px; font-weight: 700;
-      text-transform: none;
       word-break: break-word;
     }
 
@@ -100,7 +111,7 @@
       border: 1px solid rgba(99,242,255,.35);
       background: rgba(99,242,255,.08);
       color: var(--cyan);
-      font-size: 12px;
+      font-size: 11.5px;
       white-space:nowrap;
     }
     .pulse{
@@ -114,60 +125,123 @@
       70%{ box-shadow: 0 0 0 10px rgba(99,242,255,0); }
       100%{ box-shadow: 0 0 0 0 rgba(99,242,255,0); }
     }
-
     .btnAudio{
-      padding: 8px 12px;
+      padding: 7px 10px;
       border-radius: 999px;
       border: 1px solid rgba(182,255,204,.22);
       background: rgba(182,255,204,.06);
       color: var(--fg);
       font-weight: 900;
       cursor:pointer;
-      font-size: 12px;
+      font-size: 11.5px;
     }
 
-    .content{ padding: 16px 16px 18px 16px; }
+    /* ✅ Content jadi scrollable */
+    .content{
+      flex:1 1 auto;
+      padding: 12px 14px 14px 14px;
+      overflow:auto;
+    }
 
     .headline{
-      display:flex; flex-wrap:wrap; gap:12px;
+      display:flex; flex-wrap:wrap; gap:10px;
       align-items:baseline; justify-content:space-between;
     }
     .h1{
       margin:0;
-      font-size: 17px;
+      font-size: 15px;
       color: var(--warn);
       letter-spacing: .5px;
       text-transform: uppercase;
     }
     .meta{
       margin-top:6px;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--dim);
       line-height: 1.55;
     }
     .meta b{ color: var(--fg); }
 
+    /* Password box */
+    .pwBox{
+      margin-top: 10px;
+      padding: 10px;
+      border-radius: 14px;
+      border: 1px solid rgba(99,242,255,.22);
+      background: rgba(99,242,255,.06);
+      display:flex;
+      gap:8px;
+      align-items:center;
+      flex-wrap:wrap;
+    }
+    .pwBox label{
+      font-size:11.5px;
+      color:var(--cyan);
+      font-weight:1000;
+      letter-spacing:.5px;
+      text-transform:uppercase;
+      white-space:nowrap;
+    }
+    .pwInput{
+      flex:1;
+      min-width:240px;
+      padding:9px 10px;
+      border-radius:12px;
+      border:1px solid rgba(17,50,34,.85);
+      background:#000;
+      color:var(--fg);
+      font-size:13.5px;
+    }
+    .pwBtn{
+      padding:9px 10px;
+      border-radius:12px;
+      border: 1px solid rgba(34,255,140,.28);
+      background: rgba(34,255,140,.10);
+      color: var(--fg);
+      font-weight: 1000;
+      cursor:pointer;
+      white-space:nowrap;
+      font-size:12px;
+    }
+    .btnLock{
+      padding:9px 10px;
+      border-radius:12px;
+      border: 1px solid rgba(182,255,204,.22);
+      background: rgba(182,255,204,.06);
+      color: var(--fg);
+      font-weight: 1000;
+      cursor:pointer;
+      font-size:12px;
+      white-space:nowrap;
+    }
+    .pwMsg{
+      width:100%;
+      font-size:11.5px;
+      color:var(--dim);
+      line-height:1.5;
+    }
+
     .terminalBox{
-      margin-top:14px;
+      margin-top:12px;
       border: 1px solid rgba(17,50,34,.8);
       border-radius: 16px;
       background: rgba(0,0,0,.35);
       overflow:hidden;
     }
     .termHead{
-      padding: 10px 12px;
+      padding: 9px 10px;
       border-bottom: 1px solid rgba(17,50,34,.8);
       color: var(--cyan);
-      font-size: 12px;
+      font-size: 11.5px;
       letter-spacing:.4px;
       display:flex; justify-content:space-between; gap:10px;
       flex-wrap:wrap;
     }
     .termBody{
-      padding: 12px;
-      font-size: 13px;
+      padding: 10px;
+      font-size: 12.5px;
       line-height: 1.55;
-      max-height: 220px;
+      max-height: 200px;
       overflow:auto;
     }
     .line{white-space:pre-wrap}
@@ -177,21 +251,22 @@
     .err{color:var(--err)}
 
     .count{
-      margin-top:12px;
-      display:flex; flex-wrap:wrap; gap:12px;
+      margin-top:10px;
+      display:flex; flex-wrap:wrap; gap:10px;
       align-items:center; justify-content:space-between;
     }
+    /* ✅ Timer pakai clamp biar adaptif */
     .timer{
-      font-size: 38px;
+      font-size: clamp(26px, 3.4vw, 34px);
       font-weight: 900;
       letter-spacing: 1px;
       text-shadow: 0 0 18px rgba(99,242,255,.12);
     }
-    .subTimer{ font-size: 12px; color: var(--dim); }
+    .subTimer{ font-size: 11.5px; color: var(--dim); }
 
     .loaderWrap{
-      margin-top: 12px;
-      height: 12px;
+      margin-top: 10px;
+      height: 11px;
       border-radius: 999px;
       background: rgba(182,255,204,.06);
       border: 1px solid rgba(182,255,204,.18);
@@ -207,11 +282,11 @@
     @keyframes load{ 0%{ transform: translateX(-60%);} 50%{ transform: translateX(180%);} 100%{ transform: translateX(-60%);} }
 
     .lock,.okBox{
-      margin-top: 12px;
-      padding: 12px 14px;
+      margin-top: 10px;
+      padding: 10px 12px;
       border-radius: 14px;
       font-weight: 900;
-      font-size: 12.5px;
+      font-size: 12px;
     }
     .lock{
       border: 1px solid rgba(255,223,107,.28);
@@ -226,7 +301,7 @@
     }
 
     .btnRow{
-      margin-top: 12px;
+      margin-top: 10px;
       display:flex;
       gap:10px;
       flex-wrap:wrap;
@@ -234,98 +309,38 @@
     .btn{
       display:none;
       flex:1;
-      min-width: 260px;
-      padding: 14px 16px;
+      min-width: 240px;
+      padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid rgba(99,242,255,.35);
       background: rgba(99,242,255,.10);
       color: var(--cyan);
       font-weight: 900;
       cursor:pointer;
-      font-size: 14px;
+      font-size: 13px;
       text-transform: uppercase;
       letter-spacing:.6px;
     }
-    .btn:active{transform:scale(.99)}
     .btnHack{
       flex:1;
-      min-width: 260px;
-      padding: 14px 16px;
+      min-width: 240px;
+      padding: 12px 14px;
       border-radius: 14px;
       border: 1px solid rgba(255,223,107,.28);
       background: rgba(255,223,107,.08);
       color: var(--warn);
       font-weight: 900;
       cursor:pointer;
-      font-size: 14px;
+      font-size: 13px;
       text-transform: uppercase;
       letter-spacing:.6px;
-    }
-    .btnHack:active{transform:scale(.99)}
-    .btnLock{
-      padding: 10px 12px;
-      border-radius: 12px;
-      border: 1px solid rgba(182,255,204,.22);
-      background: rgba(182,255,204,.06);
-      color: var(--fg);
-      font-weight: 900;
-      cursor:pointer;
-      font-size: 12px;
-      white-space:nowrap;
     }
 
     .note{
       margin-top: 10px;
-      font-size: 12px;
+      font-size: 11.5px;
       color: var(--dim);
       line-height: 1.6;
-    }
-
-    /* Password box */
-    .pwBox{
-      margin-top: 12px;
-      padding: 12px;
-      border-radius: 14px;
-      border: 1px solid rgba(99,242,255,.22);
-      background: rgba(99,242,255,.06);
-      display:flex;
-      gap:10px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
-    .pwBox label{
-      font-size:12px;
-      color:var(--cyan);
-      font-weight:1000;
-      letter-spacing:.5px;
-      text-transform:uppercase;
-      white-space:nowrap;
-    }
-    .pwInput{
-      flex:1;
-      min-width:260px;
-      padding:10px 12px;
-      border-radius:12px;
-      border:1px solid rgba(17,50,34,.85);
-      background:#000;
-      color:var(--fg);
-      font-size:14px;
-    }
-    .pwBtn{
-      padding:10px 12px;
-      border-radius:12px;
-      border: 1px solid rgba(34,255,140,.28);
-      background: rgba(34,255,140,.10);
-      color: var(--fg);
-      font-weight: 1000;
-      cursor:pointer;
-      white-space:nowrap;
-    }
-    .pwMsg{
-      width:100%;
-      font-size:12px;
-      color:var(--dim);
-      line-height:1.5;
     }
 
     /* Access Granted overlay */
@@ -340,7 +355,7 @@
     }
     .overlay.show{ display:flex; }
     .overlayCard{
-      width:min(760px, 100%);
+      width:min(740px, 100%);
       border:1px solid rgba(99,242,255,.40);
       border-radius:18px;
       background: linear-gradient(180deg, rgba(6,20,14,.92), rgba(0,0,0,.72));
@@ -352,7 +367,7 @@
     }
     @keyframes popIn{ to{ transform: translateY(0) scale(1); opacity:1; } }
     .overlayHead{
-      padding: 14px 14px;
+      padding: 12px 14px;
       border-bottom: 1px solid rgba(99,242,255,.20);
       color: var(--cyan);
       font-weight: 900;
@@ -362,7 +377,7 @@
       flex-wrap:wrap;
     }
     .seal{
-      font-size:12px; color: var(--dim);
+      font-size:11.5px; color: var(--dim);
       border:1px solid rgba(182,255,204,.20);
       padding:5px 10px; border-radius:999px;
       background: rgba(182,255,204,.06);
@@ -370,7 +385,7 @@
     }
     .overlayBody{ padding: 14px; }
     .bigGrant{
-      font-size: 34px;
+      font-size: 30px;
       font-weight: 1000;
       letter-spacing: 1.2px;
       margin: 6px 0 8px 0;
@@ -413,7 +428,7 @@
       padding:16px;
     }
     .audioGateCard{
-      width:min(720px, 100%);
+      width:min(640px, 100%);
       border:1px solid rgba(99,242,255,.40);
       border-radius:18px;
       background: linear-gradient(180deg, rgba(6,20,14,.92), rgba(0,0,0,.78));
@@ -462,12 +477,10 @@
   <div class="scanner"></div>
   <div class="scanlines"></div>
 
-  <!-- Upload file audio kamu ke repo: bond.mp3 -->
   <audio id="bgm" preload="auto" loop>
     <source src="bond.mp3" type="audio/mpeg">
   </audio>
 
-  <!-- TAP/CLICK to start audio -->
   <div id="audioGate" class="audioGate">
     <div class="audioGateCard">
       <div class="audioGateTitle">🔒 AUDIO LOCKED</div>
@@ -480,7 +493,6 @@
     </div>
   </div>
 
-  <!-- ACCESS GRANTED overlay -->
   <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Access Granted">
     <div class="overlayCard">
       <div class="overlayHead">
@@ -522,17 +534,15 @@
         </div>
 
         <div class="meta">
-          Status: <b id="statusText">LOCKED</b> •
-          Now (WIB): <b id="nowLabel">—</b><br/>
+          Status: <b id="statusText">LOCKED</b> • Now (WIB): <b id="nowLabel">—</b><br/>
           Tunggu sampai waktu target, atau masukkan <b>kata sandi</b> untuk bypass.
         </div>
 
-        <!-- PASSWORD BYPASS -->
         <div class="pwBox">
           <label for="pw">Kata Sandi</label>
-          <input id="pw" class="pwInput" placeholder='........... />
+          <input id="pw" class="pwInput" placeholder="Mas Ari ganteng banget" />
           <button id="pwBtn" class="pwBtn" type="button">UNLOCK</button>
-          <button id="relockBtn" class="btnLock" type="button">LOCK KEMBALI</button>
+          <button id="relockBtn" class="btnLock" type="button">LOCK</button>
           <div id="pwMsg" class="pwMsg">Hint: hanya Mas Ari yang tahu 😄</div>
         </div>
 
@@ -560,23 +570,18 @@
         <div id="unlocked" class="okBox">✅ UNLOCKED — clearance diterima. Silakan lanjut.</div>
 
         <div class="btnRow">
-          <button id="go" class="btn" onclick="location.href='terminal.html'">
-            OPEN TERMINAL (RAHASIA) 💚
-          </button>
-          <button id="forceBtn" class="btnHack" type="button">
-            COBA BOBOL PAKSA ⚠️
-          </button>
+          <button id="go" class="btn" onclick="location.href='terminal.html'">OPEN TERMINAL 💚</button>
+          <button id="forceBtn" class="btnHack" type="button">COBA BOBOL PAKSA ⚠️</button>
         </div>
 
         <div class="note">
-          Audio aktif setelah klik “CLICK TO START AUDIO”. Password bypass cuma untuk “easter egg” 😄
+          Kalau layar kecil: scroll di dalam panel (tidak kepotong). ✅
         </div>
       </div>
     </div>
   </div>
 
 <script>
-  // Target: 09 Januari 2026 19:00 WIB (UTC+07:00)
   const TARGET = new Date("2026-01-09T19:00:00+07:00");
 
   const panel = document.getElementById("panel");
@@ -591,16 +596,12 @@
   const extra = document.getElementById("extra");
   const overlay = document.getElementById("overlay");
 
-  // Password UI
   const pw = document.getElementById("pw");
   const pwBtn = document.getElementById("pwBtn");
   const pwMsg = document.getElementById("pwMsg");
   const relockBtn = document.getElementById("relockBtn");
+  const SECRET = "mas ari ganteng banget";
 
-  // Password yang diminta user:
-  const SECRET = "mas ari ganteng banget"; // compare in lowercase
-
-  // Audio
   const bgm = document.getElementById("bgm");
   const audioBtn = document.getElementById("audioBtn");
   const audioGate = document.getElementById("audioGate");
@@ -616,7 +617,6 @@
     }).format(d);
   }
   function pad(n){ return String(n).padStart(2,"0"); }
-
   targetLabel.textContent = fmtWIB(TARGET);
 
   function logLine(text, cls="dim"){
@@ -643,11 +643,8 @@
 
   audioBtn.addEventListener("click", async ()=>{
     try{
-      if(audioOn){
-        bgm.pause(); audioOn=false;
-      }else{
-        await bgm.play(); audioOn=true;
-      }
+      if(audioOn){ bgm.pause(); audioOn=false; }
+      else{ await bgm.play(); audioOn=true; }
       setAudioBtn();
       logLine(audioOn ? ">> audio: ON" : ">> audio: OFF", "dim");
     }catch(e){
@@ -656,7 +653,6 @@
     }
   });
 
-  // Access Granted overlay
   let overlayShown = false;
   function showAccessGranted(){
     if(overlayShown) return;
@@ -665,47 +661,45 @@
     setTimeout(()=>overlay.classList.remove("show"), 2200);
   }
 
-  // ===== Unlock state (timer OR password) =====
   let manualUnlock = false;
 
+  const forceBtn = document.getElementById("forceBtn");
+  let attempts = 0;
+  let lockedOutUntil = 0;
+
+  function flash(){
+    panel.classList.remove("flash"); void panel.offsetWidth; panel.classList.add("flash");
+  }
+
   function setUnlockedUI(reason){
-    countdownEl.textContent = "00:00:00";
-    extra.textContent = reason || "time-lock released.";
     locked.style.display = "none";
     unlocked.style.display = "block";
     go.style.display = "inline-block";
     statusText.textContent = "UNLOCKED";
+    extra.textContent = reason || "unlocked";
 
-    // disable force hack
     forceBtn.textContent = "BOBOL PAKSA (GAGAL) ✅";
     forceBtn.disabled = true;
     forceBtn.style.opacity = "0.7";
     forceBtn.style.cursor = "not-allowed";
 
-    logLine(`>> UNLOCKED via ${reason}`, "cyan");
     showAccessGranted();
   }
-
   function setLockedUI(){
     locked.style.display = "block";
     unlocked.style.display = "none";
     go.style.display = "none";
     statusText.textContent = "LOCKED";
+    extra.textContent = "countdown running…";
 
     forceBtn.textContent = "COBA BOBOL PAKSA ⚠️";
     forceBtn.disabled = false;
     forceBtn.style.opacity = "1";
     forceBtn.style.cursor = "pointer";
 
-    overlayShown = false; // allow overlay again next unlock
-    logLine(">> system relocked.", "warn");
+    overlayShown = false;
   }
 
-  function isUnlockedNow(){
-    return manualUnlock || (Date.now() >= TARGET.getTime());
-  }
-
-  // Password submit
   function tryPassword(){
     const input = pw.value.trim().toLowerCase();
     if(!input){
@@ -717,6 +711,7 @@
       manualUnlock = true;
       pwMsg.textContent = "✅ kata sandi benar. akses dibuka!";
       pwMsg.style.color = "var(--cyan)";
+      logLine(">> password bypass: SUCCESS ✅", "cyan");
       setUnlockedUI("PASSWORD BYPASS");
     }else{
       pwMsg.textContent = "❌ kata sandi salah. coba lagi…";
@@ -732,21 +727,13 @@
     pw.value = "";
     pwMsg.textContent = "Hint: hanya Mas Ari yang tahu 😄";
     pwMsg.style.color = "var(--dim)";
+    logLine(">> relock: OK", "warn");
     setLockedUI();
   });
 
-  // ===== Fake hack (coba bobol paksa) =====
-  const forceBtn = document.getElementById("forceBtn");
-  let attempts = 0;
-  let lockedOutUntil = 0;
-
-  function flash(){
-    panel.classList.remove("flash"); void panel.offsetWidth; panel.classList.add("flash");
-  }
-
   function runFakeHack(){
     const now = Date.now();
-    if(isUnlockedNow()){
+    if(manualUnlock || now >= TARGET.getTime()){
       logLine(">> force-entry not needed. already unlocked.", "cyan");
       return;
     }
@@ -773,27 +760,27 @@
       if(i>=steps.length){
         clearInterval(t);
         flash();
-        const penalty = Math.min(10 + attempts*5, 40);
+        const penalty = Math.min(8 + attempts*4, 30);
         lockedOutUntil = Date.now() + penalty*1000;
-        logLine(`>> penalty applied: lockout ${penalty}s (jangan nakal ya 😄)`, "warn");
+        logLine(`>> penalty applied: lockout ${penalty}s`, "warn");
       }
-    }, 420);
+    }, 380);
   }
   forceBtn.addEventListener("click", runFakeHack);
 
-  // Countdown
   function tick(){
     const now = new Date();
     nowLabel.textContent = fmtWIB(now);
 
     if(manualUnlock){
-      // if unlocked by password, keep showing unlocked UI
+      countdownEl.textContent = "00:00:00";
       setUnlockedUI("PASSWORD BYPASS");
       return;
     }
 
     const diff = TARGET.getTime() - now.getTime();
     if(diff <= 0){
+      countdownEl.textContent = "00:00:00";
       setUnlockedUI("TIMER");
       return;
     }
@@ -805,8 +792,6 @@
     const secs = totalSeconds % 60;
 
     countdownEl.textContent = (days>0 ? `${days} hari  ` : "") + `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
-    extra.textContent = "countdown running…";
-    statusText.textContent = "LOCKED";
 
     if(secs % 15 === 0){
       const msgs = [
@@ -825,4 +810,3 @@
 </script>
 </body>
 </html>
-
