@@ -1,0 +1,342 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Terminal // Ucapan</title>
+<style>
+  body{
+    margin:0;
+    background:#050c08;
+    color:#b6ffcc;
+    font-family:Consolas, monospace;
+    min-height:100vh;
+  }
+  .wrap{max-width:900px;margin:auto;padding:20px}
+  .bar{
+    padding:12px 16px;
+    border:1px solid #113222;
+    border-radius:14px;
+    background:#0b1b11;
+    font-weight:bold;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    gap:12px;
+    flex-wrap:wrap;
+  }
+  .dim{color:#6be593}
+  a.back{
+    color:#63f2ff; text-decoration:none;
+    border:1px solid rgba(99,242,255,.35);
+    padding:6px 10px; border-radius:999px;
+    background:rgba(99,242,255,.08);
+    font-size:12px;
+  }
+  .term{
+    margin-top:14px;
+    height:460px;
+    overflow:auto;
+    padding:14px;
+    border:1px solid #113222;
+    border-radius:14px;
+    background:#000;
+  }
+  .line{white-space:pre-wrap}
+  .warn{color:#ffdf6b}
+  .ok{color:#63f2ff}
+  .err{color:#ff6b6b}
+  .input{
+    margin-top:10px;
+    display:flex;
+    gap:10px;
+    flex-wrap:wrap;
+  }
+  input{
+    flex:1;
+    min-width:240px;
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #113222;
+    background:#000;
+    color:#b6ffcc;
+  }
+  button{
+    padding:10px 16px;
+    border-radius:10px;
+    border:1px solid #113222;
+    background:#0b1b11;
+    color:#b6ffcc;
+    font-weight:bold;
+    cursor:pointer;
+  }
+  .reveal{
+    display:none;
+    margin-top:12px;
+    padding:16px;
+    border-radius:14px;
+    background:#071a12;
+    border:1px solid #113222;
+    text-align:left;
+  }
+  .reveal h2{margin:0 0 10px 0}
+  .typing { white-space: pre-wrap; line-height: 1.6; }
+  .cursor::after{
+    content:"▌";
+    animation: blink 1s infinite;
+  }
+  @keyframes blink{
+    0%,50%{opacity:1}
+    51%,100%{opacity:0}
+  }
+
+  /* Access Granted overlay animation */
+  .overlay{
+    position:fixed; inset:0;
+    display:none;
+    align-items:center; justify-content:center;
+    background: rgba(0,0,0,.72);
+    backdrop-filter: blur(6px);
+    z-index: 9999;
+  }
+  .overlay.show{ display:flex; }
+  .overlayCard{
+    width:min(760px, 92vw);
+    border:1px solid rgba(99,242,255,.40);
+    border-radius:18px;
+    background: linear-gradient(180deg, rgba(6,20,14,.92), rgba(0,0,0,.72));
+    box-shadow: 0 20px 80px rgba(0,0,0,.7);
+    overflow:hidden;
+    transform: translateY(10px) scale(.98);
+    opacity:0;
+    animation: popIn .55s ease forwards;
+  }
+  @keyframes popIn{
+    to{ transform: translateY(0) scale(1); opacity:1; }
+  }
+  .overlayHead{
+    padding: 14px 16px;
+    border-bottom: 1px solid rgba(99,242,255,.20);
+    color: #63f2ff;
+    font-weight: 900;
+    letter-spacing:.8px;
+    text-transform: uppercase;
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+  }
+  .seal{
+    font-size:12px; color: #6be593;
+    border:1px solid rgba(182,255,204,.20);
+    padding:5px 10px; border-radius:999px;
+    background: rgba(182,255,204,.06);
+    white-space:nowrap;
+  }
+  .overlayBody{ padding: 16px; }
+  .bigGrant{
+    font-size: 34px;
+    font-weight: 1000;
+    letter-spacing: 1.4px;
+    margin: 6px 0 8px 0;
+    color: #63f2ff;
+    text-shadow: 0 0 22px rgba(99,242,255,.14);
+  }
+  .grantSub{
+    color: #b6ffcc;
+    line-height: 1.65;
+    font-size: 14px;
+    margin:0;
+  }
+  .grantBar{
+    margin-top: 14px;
+    height: 12px;
+    border-radius: 999px;
+    background: rgba(182,255,204,.06);
+    border: 1px solid rgba(182,255,204,.18);
+    overflow:hidden;
+    position:relative;
+  }
+  .grantFill{
+    position:absolute; left:0; top:0; bottom:0;
+    width: 0%;
+    background: linear-gradient(90deg, rgba(99,242,255,.12), rgba(99,242,255,.50), rgba(34,255,140,.35));
+    animation: fill 1.0s ease forwards;
+  }
+  @keyframes fill{ to{ width: 100%; } }
+  .blinkText{
+    margin-top: 10px;
+    color: #ffdf6b;
+    font-weight:900;
+    letter-spacing:.8px;
+    text-transform: uppercase;
+    animation: blink2 1.1s infinite;
+    font-size: 12px;
+  }
+  @keyframes blink2{
+    0%,50%{opacity:1}
+    51%,100%{opacity:.25}
+  }
+</style>
+</head>
+<body>
+
+<!-- ACCESS GRANTED overlay -->
+<div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Access Granted">
+  <div class="overlayCard">
+    <div class="overlayHead">
+      <span>ACCESS GRANTED</span>
+      <span class="seal">CLEARANCE: LOVE</span>
+    </div>
+    <div class="overlayBody">
+      <div class="bigGrant">✅ ACCESS GRANTED</div>
+      <p class="grantSub">
+        Pesan rahasia berhasil didekripsi. Siap dibaca, Mba Anggi 🙂
+      </p>
+      <div class="grantBar"><div class="grantFill"></div></div>
+      <div class="blinkText">Decrypting message…</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div class="bar">
+    <div>SECURE LOVE TERMINAL</div>
+    <div class="dim">for Anggi</div>
+    <a class="back" href="index.html">← balik ke timer</a>
+  </div>
+
+  <div id="term" class="term"></div>
+
+  <div class="input">
+    <input id="cmd" placeholder="ketik perintah… (start / mas ari ganteng / aku sayang kamu / sumpah aku ga bohong)" autofocus />
+    <button id="runBtn">RUN</button>
+  </div>
+
+  <div id="reveal" class="reveal">
+    <h2 class="ok">🎉 PESAN TERSEMBUNYI BERHASIL DIPECAHKAN 🎉</h2>
+    <p id="typedText" class="typing cursor"></p>
+  </div>
+</div>
+
+<script>
+  const term = document.getElementById("term");
+  const cmd = document.getElementById("cmd");
+  const reveal = document.getElementById("reveal");
+  const runBtn = document.getElementById("runBtn");
+  const overlay = document.getElementById("overlay");
+
+  // Pesan panjang (typing effect)
+  const fullMessage = `Aku ga lupa hari ulang tahunmu, bukan 'kusengaja untuk tidak mengucapkan disaat hari spesialmu,
+maaf kalau tindakan kecil akan berdampak mengecewakanmu lagi,
+dan maaf juga aku belum bisa memberikanmu yang spesial dan berharga.
+
+Happy belated birthdays, Anggi Ariana Wijayanti cuyunk 🎂💖
+
+Aku hanya bisa mendoakan dan berharap kamu bisa menjadi apa yang kamu inginkan.
+Aku belum bisa menjadi full support system-mu.
+Masih banyak kekurangan yang aku miliki.
+Secuek-cueknya aku, aku masih mencintaimu.
+
+Mungkin cara mencintaiku atau perilakuku selalu mengecewakanmu,
+tapi kita sudah mulai dewasa dan menua.
+Banyak pikiran di kamu dan di aku.
+Aku sedang berjuang untuk "memantaskan", bukan sekadar "memantapkan".
+
+Kamu punya value yang bisa kamu jual,
+jadi aku terus berusaha bagaimana aku bisa membeli value darimu.
+Semoga kamu masih sabar menunggu sampai titik batasmu :)
+
+Di jalanan ada lampu,
+di kerajaan ada ratu,
+di kuburan ada hantu,
+di hatiku ada kamu.
+
+Semoga kamu tetap sehat, kuat seperti binaraga,
+dan bertahan lama seperti lampu Philips.
+
+Dari pejuang tanpa darah perang,
+salam sayang dari kesayangan Bu Yani.
+
+Mas Ari ❤️`;
+
+  function print(t, c=""){
+    const d=document.createElement("div");
+    d.className="line "+c;
+    d.textContent=t;
+    term.appendChild(d);
+    term.scrollTop=term.scrollHeight;
+  }
+
+  function banner(){
+    print("IKAN HIU NABRAK TERMINAL", "ok");
+    print(">> booting love-secure-system...", "dim");
+    print(">> hint: ketik 'start' untuk memulai", "warn");
+  }
+
+  function typeEffect(el, text, speed = 30){
+    el.textContent = "";
+    el.classList.add("cursor");
+    let i = 0;
+    const timer = setInterval(() => {
+      el.textContent += text.charAt(i);
+      i++;
+      if(i >= text.length){
+        clearInterval(timer);
+        el.classList.remove("cursor");
+      }
+    }, speed);
+  }
+
+  let step = 0;
+  let overlayShown = false;
+
+  function showAccessGranted(){
+    if(overlayShown) return;
+    overlayShown = true;
+    overlay.classList.add("show");
+    setTimeout(() => overlay.classList.remove("show"), 2200);
+  }
+
+  function run(){
+    const v = cmd.value.trim().toLowerCase();
+    if(!v) return;
+    print("$ "+v);
+    cmd.value="";
+
+    if(step===0 && v==="start"){
+      step=1;
+      print(">> target detected: Anggi Ariana Wijayanti", "ok");
+      print(">> verifikasi level 1: ketik 'mas ari ganteng'", "warn");
+      return;
+    }
+
+    if(step===1 && v==="mas ari ganteng"){
+      step=2;
+      print(">> verifikasi diterima ✔️", "ok");
+      print(">> level 2: ketik 'aku sayang kamu'", "warn");
+      return;
+    }
+
+    if(step===2 && v==="aku sayang kamu"){
+      step=3;
+      print(">> level 2 accepted ✔️", "ok");
+      print(">> final step: ketik 'sumpah aku ga bohong'", "warn");
+      return;
+    }
+
+    if(step===3 && v==="sumpah aku ga bohong"){
+      print(">> decrypting feelings... pesan akan muncul dibawah", "dim");
+      showAccessGranted();
+      reveal.style.display="block";
+      const el = document.getElementById("typedText");
+      typeEffect(el, fullMessage, 30);
+      return;
+    }
+
+    print(">> command tidak valid 😅 coba lagi", "err");
+  }
+
+  banner();
+  runBtn.addEventListener("click", run);
+  cmd.addEventListener("keydown", (e)=>{ if(e.key==="Enter"){ run(); }});
+</script>
+</body>
+</html>

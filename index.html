@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>RAHASIA NEGARA // Pesan untuk Mba Anggi</title>
+  <style>
+    :root{
+      --bg:#030806;
+      --fg:#b6ffcc;
+      --dim:#6be593;
+      --cyan:#63f2ff;
+      --warn:#ffdf6b;
+      --err:#ff6b6b;
+      --border:#113222;
+      --shadow:rgba(0,0,0,.55);
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0; min-height:100vh;
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono","Courier New", monospace;
+      color:var(--fg);
+      background: radial-gradient(1200px 800px at 10% 10%, #10331d 0%, var(--bg) 52%, #010302 100%);
+      overflow:hidden;
+    }
+
+    /* Cyber grid */
+    .grid{
+      position:fixed; inset:0; pointer-events:none; opacity:.18;
+      background-image:
+        linear-gradient(to right, rgba(99,242,255,.18) 1px, transparent 1px),
+        linear-gradient(to bottom, rgba(99,242,255,.12) 1px, transparent 1px);
+      background-size: 44px 44px;
+      transform: perspective(900px) rotateX(60deg) translateY(-18%);
+      filter: blur(.2px);
+      animation: gridMove 7s linear infinite;
+    }
+    @keyframes gridMove{
+      0%{ background-position: 0 0, 0 0; }
+      100%{ background-position: 0 220px, 220px 0; }
+    }
+
+    /* Scanlines */
+    .scanlines{
+      position:fixed; inset:0; pointer-events:none; opacity:.18;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0,0,0,0) 0px,
+        rgba(0,0,0,0) 3px,
+        rgba(0,0,0,.55) 4px
+      );
+      mix-blend-mode: multiply;
+    }
+
+    /* Sweeping scanner bar */
+    .scanner{
+      position:fixed; left:0; right:0; height:180px; pointer-events:none;
+      top:-200px;
+      background: linear-gradient(180deg, rgba(99,242,255,0) 0%, rgba(99,242,255,.18) 40%, rgba(34,255,140,.10) 60%, rgba(99,242,255,0) 100%);
+      filter: blur(1px);
+      animation: sweep 5.5s ease-in-out infinite;
+    }
+    @keyframes sweep{
+      0%{ top:-220px; opacity:.0 }
+      10%{ opacity:.9 }
+      50%{ top: calc(100vh - 120px); opacity:.55 }
+      90%{ opacity:.9 }
+      100%{ top:-220px; opacity:.0 }
+    }
+
+    /* Floating particles */
+    .particles{
+      position:fixed; inset:0; pointer-events:none; opacity:.35;
+      background-image:
+        radial-gradient(circle at 20% 25%, rgba(99,242,255,.35) 0 1px, transparent 2px),
+        radial-gradient(circle at 70% 60%, rgba(34,255,140,.28) 0 1px, transparent 2px),
+        radial-gradient(circle at 35% 75%, rgba(255,223,107,.22) 0 1px, transparent 2px),
+        radial-gradient(circle at 85% 30%, rgba(99,242,255,.25) 0 1px, transparent 2px);
+      background-size: 520px 520px;
+      animation: floaty 8s ease-in-out infinite alternate;
+    }
+    @keyframes floaty{
+      from{ transform: translateY(0px) }
+      to{ transform: translateY(18px) }
+    }
+
+    .wrap{
+      position:relative;
+      max-width: 980px;
+      margin: 0 auto;
+      padding: 22px;
+      min-height: 100vh;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+    }
+    .panel{
+      width:100%;
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      background: linear-gradient(180deg, rgba(11,27,17,.78), rgba(0,0,0,.35));
+      box-shadow: 0 18px 60px var(--shadow);
+      overflow:hidden;
+      backdrop-filter: blur(10px);
+    }
+
+    .topbar{
+      display:flex; justify-content:space-between; align-items:center;
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(17,50,34,.75);
+      background: rgba(5,12,8,.55);
+      gap:12px;
+    }
+    .dots{display:flex; gap:8px; align-items:center;}
+    .dot{width:10px;height:10px;border-radius:50%}
+    .dot.r{background:#ff5f56}.dot.y{background:#ffbd2e}.dot.g{background:#27c93f}
+
+    .title{
+      font-weight: 900;
+      letter-spacing: .6px;
+      text-transform: uppercase;
+      font-size: 13px;
+      line-height: 1.2;
+    }
+    .subtitle{
+      margin-top:4px;
+      font-size:12px;
+      color: var(--dim);
+      letter-spacing: .3px;
+      text-transform: none;
+      font-weight: 700;
+    }
+
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      border: 1px solid rgba(99,242,255,.35);
+      background: rgba(99,242,255,.08);
+      color: var(--cyan);
+      font-size: 12px;
+      white-space:nowrap;
+    }
+    .pulse{
+      width:8px; height:8px; border-radius:50%;
+      background: var(--cyan);
+      box-shadow: 0 0 0 0 rgba(99,242,255,.65);
+      animation: pulse 1.6s infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(99,242,255,.65); }
+      70%{ box-shadow: 0 0 0 10px rgba(99,242,255,0); }
+      100%{ box-shadow: 0 0 0 0 rgba(99,242,255,0); }
+    }
+
+    .content{ padding: 18px 18px 20px 18px; }
+
+    .headline{
+      display:flex; flex-wrap:wrap; gap:10px; align-items:baseline; justify-content:space-between;
+    }
+    .h1{
+      margin:0;
+      font-size: 18px;
+      color: var(--warn);
+      letter-spacing: .5px;
+      text-transform: uppercase;
+    }
+    .meta{
+      margin-top:6px;
+      font-size: 12px;
+      color: var(--dim);
+      line-height: 1.55;
+    }
+    .meta b{ color: var(--fg); }
+
+    .terminalBox{
+      margin-top:14px;
+      border: 1px solid rgba(17,50,34,.8);
+      border-radius: 16px;
+      background: rgba(0,0,0,.35);
+      overflow:hidden;
+    }
+    .termHead{
+      padding: 10px 12px;
+      border-bottom: 1px solid rgba(17,50,34,.8);
+      color: var(--cyan);
+      font-size: 12px;
+      letter-spacing:.4px;
+      display:flex; justify-content:space-between; gap:10px;
+    }
+    .termBody{
+      padding: 12px;
+      min-height: 170px;
+      font-size: 14px;
+      line-height: 1.5;
+      max-height: 220px;
+      overflow:auto;
+    }
+    .line{white-space:pre-wrap}
+    .dim{color:var(--dim)}
+    .warn{color:var(--warn)}
+    .err{color:var(--err)}
+    .cyan{color:var(--cyan)}
+
+    .count{
+      margin-top:10px;
+      display:flex; flex-wrap:wrap; gap:10px; align-items:center; justify-content:space-between;
+    }
+    .timer{
+      font-size: 38px;
+      font-weight: 900;
+      letter-spacing: 1px;
+      text-shadow: 0 0 18px rgba(99,242,255,.12);
+    }
+    .subTimer{ font-size: 12px; color: var(--dim); }
+
+    /* Loading bar animation */
+    .loaderWrap{
+      margin-top: 12px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(182,255,204,.06);
+      border: 1px solid rgba(182,255,204,.18);
+      overflow:hidden;
+      position:relative;
+    }
+    .loaderBar{
+      position:absolute; inset:0;
+      width: 35%;
+      background: linear-gradient(90deg, rgba(99,242,255,.05), rgba(99,242,255,.35), rgba(34,255,140,.25), rgba(99,242,255,.05));
+      filter: blur(.2px);
+      animation: load 1.8s ease-in-out infinite;
+    }
+    @keyframes load{
+      0%{ transform: translateX(-60%); }
+      50%{ transform: translateX(180%); }
+      100%{ transform: translateX(-60%); }
+    }
+
+    .lock{
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,223,107,.28);
+      background: rgba(255,223,107,.08);
+      color: var(--warn);
+      font-weight: 800;
+    }
+    .ok{
+      display:none;
+      margin-top: 12px;
+      padding: 12px 14px;
+      border-radius: 14px;
+      border: 1px solid rgba(34,255,140,.28);
+      background: rgba(34,255,140,.10);
+      color: var(--fg);
+      font-weight: 900;
+    }
+    .btn{
+      display:none;
+      margin-top: 14px;
+      width:100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      border: 1px solid rgba(99,242,255,.35);
+      background: rgba(99,242,255,.10);
+      color: var(--cyan);
+      font-weight: 900;
+      cursor:pointer;
+      font-size: 15px;
+      text-transform: uppercase;
+      letter-spacing:.6px;
+    }
+    .btn:hover{filter:brightness(1.12)}
+    .note{
+      margin-top: 10px;
+      font-size: 12px;
+      color: var(--dim);
+      line-height: 1.6;
+    }
+    .kbd{
+      display:inline-block;
+      border:1px solid rgba(182,255,204,.28);
+      padding:0 6px;
+      border-radius:8px;
+      font-size:12px;
+      color:var(--fg);
+      background:rgba(182,255,204,.06);
+    }
+
+    /* Access Granted overlay animation */
+    .overlay{
+      position:fixed; inset:0;
+      display:none;
+      align-items:center; justify-content:center;
+      background: rgba(0,0,0,.68);
+      backdrop-filter: blur(6px);
+      z-index: 9999;
+    }
+    .overlay.show{ display:flex; }
+    .overlayCard{
+      width:min(760px, 92vw);
+      border:1px solid rgba(99,242,255,.40);
+      border-radius:18px;
+      background: linear-gradient(180deg, rgba(6,20,14,.92), rgba(0,0,0,.72));
+      box-shadow: 0 20px 80px rgba(0,0,0,.7);
+      overflow:hidden;
+      transform: translateY(10px) scale(.98);
+      opacity:0;
+      animation: popIn .55s ease forwards;
+    }
+    @keyframes popIn{
+      to{ transform: translateY(0) scale(1); opacity:1; }
+    }
+    .overlayHead{
+      padding: 14px 16px;
+      border-bottom: 1px solid rgba(99,242,255,.20);
+      color: var(--cyan);
+      font-weight: 900;
+      letter-spacing:.8px;
+      text-transform: uppercase;
+      display:flex; align-items:center; justify-content:space-between; gap:12px;
+    }
+    .seal{
+      font-size:12px; color: var(--dim);
+      border:1px solid rgba(182,255,204,.20);
+      padding:5px 10px; border-radius:999px;
+      background: rgba(182,255,204,.06);
+      white-space:nowrap;
+    }
+    .overlayBody{
+      padding: 16px;
+    }
+    .bigGrant{
+      font-size: 34px;
+      font-weight: 1000;
+      letter-spacing: 1.4px;
+      margin: 6px 0 8px 0;
+      color: var(--cyan);
+      text-shadow: 0 0 22px rgba(99,242,255,.14);
+    }
+    .grantSub{
+      color: var(--fg);
+      line-height: 1.65;
+      font-size: 14px;
+      margin:0;
+    }
+    .grantBar{
+      margin-top: 14px;
+      height: 12px;
+      border-radius: 999px;
+      background: rgba(182,255,204,.06);
+      border: 1px solid rgba(182,255,204,.18);
+      overflow:hidden;
+      position:relative;
+    }
+    .grantFill{
+      position:absolute; left:0; top:0; bottom:0;
+      width: 0%;
+      background: linear-gradient(90deg, rgba(99,242,255,.12), rgba(99,242,255,.50), rgba(34,255,140,.35));
+      animation: fill 1.0s ease forwards;
+    }
+    @keyframes fill{
+      to{ width: 100%; }
+    }
+    .blinkText{
+      margin-top: 10px;
+      color: var(--warn);
+      font-weight:900;
+      letter-spacing:.8px;
+      text-transform: uppercase;
+      animation: blink 1.1s infinite;
+      font-size: 12px;
+    }
+    @keyframes blink{
+      0%,50%{opacity:1}
+      51%,100%{opacity:.25}
+    }
+  </style>
+</head>
+<body>
+  <div class="grid"></div>
+  <div class="particles"></div>
+  <div class="scanner"></div>
+  <div class="scanlines"></div>
+
+  <!-- ACCESS GRANTED overlay -->
+  <div id="overlay" class="overlay" role="dialog" aria-modal="true" aria-label="Access Granted">
+    <div class="overlayCard">
+      <div class="overlayHead">
+        <span>ACCESS GRANTED</span>
+        <span class="seal">CLEARANCE: ALPHA</span>
+      </div>
+      <div class="overlayBody">
+        <div class="bigGrant">✅ ACCESS GRANTED</div>
+        <p class="grantSub">
+          Time-lock berhasil dibuka. Pesan rahasia untuk <b>Mba Anggi</b> siap diakses.
+          Silakan lanjut ke terminal.
+        </p>
+        <div class="grantBar"><div class="grantFill"></div></div>
+        <div class="blinkText">Proceed to terminal…</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <div class="panel">
+      <div class="topbar">
+        <div class="dots"><span class="dot r"></span><span class="dot y"></span><span class="dot g"></span></div>
+        <div>
+          <div class="title">PESAN NEGARA SANGAT RAHASIA</div>
+          <div class="subtitle">pesan rahasia untuk Mba anggi</div>
+        </div>
+        <div class="badge"><span class="pulse"></span> uplink: stable</div>
+      </div>
+
+      <div class="content">
+        <div class="headline">
+          <h1 class="h1">Akses Akan Dibuka Otomatis</h1>
+          <div class="subTimer">Target (WIB): <b id="targetLabel">—</b></div>
+        </div>
+
+        <div class="meta">
+          Status: <b id="statusText">LOCKED</b> •
+          Waktu sekarang (WIB): <b id="nowLabel">—</b><br/>
+          Instruksi: tunggu sampai waktu target, lalu tombol <span class="kbd">OPEN TERMINAL</span> akan muncul.
+        </div>
+
+        <div class="terminalBox">
+          <div class="termHead">
+            <span>terminal://countdown-monitor</span>
+            <span class="dim">cipher: time-lock</span>
+          </div>
+          <div class="termBody" id="term">
+            <div class="line dim">>> initializing secure channel...</div>
+            <div class="line dim">>> validating clearance level...</div>
+            <div class="line warn">>> ACCESS WINDOW is time-locked.</div>
+            <div class="line dim">>> waiting for target timestamp...</div>
+          </div>
+        </div>
+
+        <div class="count">
+          <div class="timer" id="countdown">--:--:--</div>
+          <div class="subTimer" id="extra">countdown running…</div>
+        </div>
+
+        <div class="loaderWrap" aria-hidden="true"><div class="loaderBar"></div></div>
+
+        <div id="locked" class="lock">🔒 LOCKED — ini pesan rahasia, belum waktunya dibuka.</div>
+        <div id="unlocked" class="ok">✅ UNLOCKED — clearance diterima. Silakan lanjut.</div>
+
+        <button id="go" class="btn" onclick="location.href='terminal.html'">
+          OPEN TERMINAL (RAHASIA) 💚
+        </button>
+
+        <div class="note">
+          Catatan: kunci waktu mengikuti jam perangkat yang membuka halaman.
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Target: 09 Januari 2026 19:00 WIB (UTC+07:00)
+  const TARGET = new Date("2026-01-09T19:00:00+07:00");
+
+  const targetLabel = document.getElementById("targetLabel");
+  const nowLabel = document.getElementById("nowLabel");
+  const countdownEl = document.getElementById("countdown");
+  const locked = document.getElementById("locked");
+  const unlocked = document.getElementById("unlocked");
+  const go = document.getElementById("go");
+  const statusText = document.getElementById("statusText");
+  const term = document.getElementById("term");
+  const extra = document.getElementById("extra");
+  const overlay = document.getElementById("overlay");
+
+  function fmtWIB(d){
+    return new Intl.DateTimeFormat("id-ID", {
+      timeZone: "Asia/Jakarta",
+      year: "numeric", month: "long", day: "2-digit",
+      hour: "2-digit", minute: "2-digit", second: "2-digit"
+    }).format(d);
+  }
+  function pad(n){ return String(n).padStart(2,"0"); }
+
+  targetLabel.textContent = fmtWIB(TARGET);
+
+  function logLine(text, cls="dim"){
+    const div = document.createElement("div");
+    div.className = "line " + cls;
+    div.textContent = text;
+    term.appendChild(div);
+    term.scrollTop = term.scrollHeight;
+  }
+
+  let unlockedLogged = false;
+  let overlayShown = false;
+
+  function showAccessGranted(){
+    if(overlayShown) return;
+    overlayShown = true;
+    overlay.classList.add("show");
+    // hilang otomatis setelah 2.2 detik
+    setTimeout(() => {
+      overlay.classList.remove("show");
+    }, 2200);
+  }
+
+  function tick(){
+    const now = new Date();
+    nowLabel.textContent = fmtWIB(now);
+
+    const diff = TARGET.getTime() - now.getTime();
+
+    if(diff <= 0){
+      countdownEl.textContent = "00:00:00";
+      extra.textContent = "time-lock released.";
+      locked.style.display = "none";
+      unlocked.style.display = "block";
+      go.style.display = "block";
+      statusText.textContent = "UNLOCKED";
+
+      if(!unlockedLogged){
+        unlockedLogged = true;
+        logLine(">> timestamp matched ✅", "cyan");
+        logLine(">> clearance granted ✅", "cyan");
+        logLine(">> OPEN TERMINAL now available.", "warn");
+        showAccessGranted();
+      }
+      return;
+    }
+
+    const totalSeconds = Math.floor(diff / 1000);
+    const days = Math.floor(totalSeconds / 86400);
+    const hours = Math.floor((totalSeconds % 86400) / 3600);
+    const mins = Math.floor((totalSeconds % 3600) / 60);
+    const secs = totalSeconds % 60;
+
+    countdownEl.textContent = (days > 0 ? `${days} hari  ` : "") + `${pad(hours)}:${pad(mins)}:${pad(secs)}`;
+    statusText.textContent = "LOCKED";
+
+    // tambahkan "log" tiap 15 detik biar berasa monitoring
+    if(secs % 15 === 0){
+      const msgs = [
+        ">> scanning channel integrity...",
+        ">> checksum: OK",
+        ">> trace: none",
+        ">> waiting…",
+        ">> encrypting idle packets…"
+      ];
+      const m = msgs[Math.floor(Math.random()*msgs.length)];
+      logLine(m, "dim");
+    }
+  }
+
+  tick();
+  setInterval(tick, 1000);
+</script>
+</body>
+</html>
